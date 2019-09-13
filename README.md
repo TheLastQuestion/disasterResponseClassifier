@@ -8,7 +8,11 @@
     - To run ML pipeline that trains classifier and saves
         `python models/train_classifier.py data/DisasterResponse.db models/classifier.pkl`
 
-2. Run the following command in the app's directory to run your web app.
+2. Make sure you have libraries etc. installed
+    `pip install -r requirements.txt`
+
+
+3. Run the following command in the app's directory to run your web app.
     `python run.py`
 
-3. Go to http://0.0.0.0:3001/
+4. Go to http://0.0.0.0:3001/
