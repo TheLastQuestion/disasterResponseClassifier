@@ -29,6 +29,15 @@ import sqlite3
 from sqlalchemy.engine.url import URL
 
 def load_data(database_filepath):
+    """Loads database and reads in messages as well as category dummies from etlOutput table
+    
+    Args: 
+        database_filepath (string): user-provided path to database
+		
+    Returns: 
+        None
+    """
+    
     engine = create_engine('sqlite:///data/DisasterResponse.db')
     df = pd.read_sql('etlOutput', engine).dropna()
     
@@ -42,6 +51,15 @@ def load_data(database_filepath):
     pass
 
 def tokenize(text):
+    """Breaks a text into individual tokens, lemmatizes them, lowers case
+    
+    Args: 
+        text (string): a snippet of text
+		
+    Returns: 
+        tokens (array): list of words and any other tokens
+    """
+
     tokens = word_tokenize(text)
     lemmatizer = WordNetLemmatizer()
 
@@ -54,6 +72,15 @@ def tokenize(text):
     pass
 
 def build_model():
+    """Prepares ML pipeline
+    
+    Args: 
+        None
+		
+    Returns: 
+        model (object): scikitlearn GridSearchCV 
+    """
+
     forest = RandomForestClassifier(n_estimators=100, random_state=1)
 
     pipeline = Pipeline([
@@ -61,8 +88,6 @@ def build_model():
             ('tfidf', TfidfTransformer()),
             ('clf', MultiOutputClassifier(forest, n_jobs=-1))
         ])
-
-#     pipeline.fit(X_train, Y_train)
     
     parameters = {
         'vect__ngram_range': ((1, 1), (1, 2)),
@@ -79,6 +104,18 @@ def build_model():
 
 
 def evaluate_model(model, X_test, Y_test, category_names):
+    """Uses model to predict message categories then evaluates predictions against actual outcomes
+    
+    Args: 
+        model (object): scikitlearn GridSearchCV
+        X_test (array): array of message texts
+        Y_test (array): matrix of dummies indicating what categories were relevant to a given message (row, in this case)
+        category_names (array): list of category names
+		
+    Returns: 
+        None
+    """
+    
     Y_pred = model.predict(X_test)
     for i in range(4,34):
         print('***' + str(category_names[i]) + '***')
@@ -90,6 +127,15 @@ def save_model(model, model_filepath):
     pass
 
 def main():
+    """Trains and evaluates a model using message/category data, then saves that model in pickle file
+    
+    Args: 
+        None
+		
+    Returns: 
+        None
+    """    
+    
     if len(sys.argv) == 3:
         database_filepath, model_filepath = sys.argv[1:]
         print('Loading data...\n    DATABASE: {}'.format(database_filepath))

@@ -6,7 +6,7 @@
 
 1. [Installation](#installation)
 2. [Project Motivation](#motivation)
-3. [The Data]($thedata)
+3. [The Data](#thedata)
 4. [File Descriptions](#files)
 4. [Licensing, Authors, and Acknowledgements](#licensing)
 

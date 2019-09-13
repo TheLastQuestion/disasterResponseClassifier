@@ -3,6 +3,16 @@ import pandas as pd
 from sqlalchemy import create_engine
 
 def load_data(messages_filepath, categories_filepath):
+    """Takes two user-provided datasets, merges them, returns result as Pandas DataFrame
+    
+    Args: 
+        messages_filepath (string): filepath to messages data stored as csv file,
+        categories_filepath (string): filepath to categories data stored as csv file
+		
+    Returns: 
+        df (Pandas DataFrame): merged and wrangled dataset
+    """
+
     # load datasets
     messages = pd.read_csv(messages_filepath)
     categories = pd.read_csv(categories_filepath)
@@ -39,6 +49,15 @@ def load_data(messages_filepath, categories_filepath):
     pass
 
 def clean_data(df):
+    """Takes Pandas DataFrame and drops duplicates
+    
+    Args: 
+        df (Pandas Dataframe): dataframe containing messages and their tagged categories
+		
+    Returns: 
+        df (Pandas DataFrame): cleaned dataframe
+    """
+
     # drop duplicates
     df.drop_duplicates(inplace=True)
     
@@ -47,11 +66,30 @@ def clean_data(df):
 
 
 def save_data(df, database_filename):
+    """Takes data frame and saves as sqlite db with user-provided filename
+    
+    Args: 
+        df (Pandas Dataframe): cleaned dataframe containing messages and their tagged categories
+        database_filename (string): user-provided name where to store database
+		
+    Returns: 
+        None
+    """
+
     engine = create_engine('sqlite:///' + str(database_filename))
     df.to_sql('etlOutput', engine, index=False)
     pass  
 
 def main():
+    """Merges messages and categories data, cleans resulting dataframe, stores into database
+    
+    Args: 
+        None
+		
+    Returns: 
+        None
+    """
+    
     if len(sys.argv) == 4:
 
         messages_filepath, categories_filepath, database_filepath = sys.argv[1:]
