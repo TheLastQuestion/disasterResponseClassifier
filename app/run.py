@@ -39,10 +39,24 @@ model = joblib.load("../models/classifier.pkl")
 def index():
     
     # extract data needed for visuals
-    # TODO: Below is an example - modify to extract data for your own visuals
+    # Plot 1
     genre_counts = df.groupby('genre').count()['message']
     genre_names = list(genre_counts.index)
-    
+
+    # Plot 2
+    aid_related_sum = df.aid_related.sum()
+    medical_help_sum = df.medical_help.sum()
+    messages_total = df.shape[0]
+    aid_related_pct = aid_related_sum / messages_total
+
+    # Plot 3
+    df['message_len'] = df.message.apply(lambda x: len(x))
+    groups = df.groupby(pd.cut(df.message_len, 10))
+    length_names = []
+    for i in range(0,9):
+        length_names.append(str(groups.count().message_len.index[i]))
+    length_counts = groups.count().message_len.values
+
     # create visuals
     # TODO: Below is an example - modify to create your own visuals
     graphs = [
@@ -61,6 +75,42 @@ def index():
                 },
                 'xaxis': {
                     'title': "Genre"
+                }
+            }
+        },
+        {
+            'data': [
+                Bar(
+                    x=['Aid_Related','Medical_Help'],
+                    y=[aid_related_sum,medical_help_sum]
+                )
+            ],
+
+            'layout': {
+                'title': 'Distribution of Select Message Categories',
+                'yaxis': {
+                    'title': "Count"
+                },
+                'xaxis': {
+                    'title': "Category"
+                }
+            }
+        },
+        {
+            'data': [
+                Bar(
+                    x=length_names,
+                    y=length_counts
+                )
+            ],
+
+            'layout': {
+                'title': 'Distribution of Select Message Categories',
+                'yaxis': {
+                    'title': "Count"
+                },
+                'xaxis': {
+                    'title': "Category"
                 }
             }
         }

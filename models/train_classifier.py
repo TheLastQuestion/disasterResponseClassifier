@@ -38,7 +38,8 @@ def load_data(database_filepath):
         None
     """
     
-    engine = create_engine('sqlite:///data/DisasterResponse.db')
+    # engine = create_engine('sqlite:///data/DisasterResponse.db')
+    engine = create_engine('sqlite:///'+str(database_filepath))
     df = pd.read_sql('etlOutput', engine).dropna()
     
     X = df.message.values
